@@ -1,0 +1,13 @@
+language: python
+
+env:
+  - TOXENV=py27
+  - TOXENV=py34
+  - TOXENV=py35
+
+install: pip install tox
+
+script: tox
+
+notifications:
+  email: false
