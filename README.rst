@@ -10,7 +10,7 @@ It defines an actuator as a set of links and revolute joints along x-axis from a
     >>> import tinyik
     >>> arm = tinyik.Actuator('z', 1., 'z', 1.)
 
-Since the joint angles are zero by default, the end-effector position is at (2.0, 0, 0).
+Since the joint angles are zero by default, the end-effector position is at (2.0, 0, 0):
 
 .. code-block:: python
 
@@ -19,7 +19,7 @@ Since the joint angles are zero by default, the end-effector position is at (2.0
     >>> arm.ee
     array([ 2.,  0.,  0.])
 
-Sets the joint angles to 30 and 60 degrees to calculate a new position of the end-effector.
+Sets the joint angles to 30 and 60 degrees to calculate a new position of the end-effector:
 
 .. code-block:: python
 
@@ -28,7 +28,7 @@ Sets the joint angles to 30 and 60 degrees to calculate a new position of the en
     >>> arm.ee
     array([ 0.8660254,  1.5      ,  0.       ])
 
-Sets a position of the end-effector to calculate the joint angles.
+Sets a position of the end-effector to calculate the joint angles:
 
 .. code-block:: python
 
