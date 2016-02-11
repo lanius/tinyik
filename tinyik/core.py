@@ -82,7 +82,7 @@ class IKSolver(object):
         """Generate an IK solver from a FK solver instance."""
         def distance_squared(target, angles):
             x = target - fk_solver.solve(angles)
-            return (x[0] ** 2) + (x[1] ** 2) + (x[2] ** 2)
+            return np.sum(np.power(x, 2))
 
         self._g = autograd.grad(distance_squared, argnum=1)
         self._h = autograd.hessian(distance_squared, argnum=1)
