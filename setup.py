@@ -10,7 +10,7 @@ with open('README.rst', encoding='utf-8') as f:
 
 setup(
     name='tinyik',
-    version='0.0.1',
+    version='0.1.0',
     description='A tiny inverse kinematics solver',
     long_description=long_description,
     url='http://github.com/lanius/tinyik',
