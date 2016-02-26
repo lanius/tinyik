@@ -80,19 +80,19 @@ class IKSolver(object):
 
     def __init__(self, fk_solver):
         """Generate an IK solver from a FK solver instance."""
-        def distance_squared(target, angles):
+        def distance_squared(angles, target):
             x = target - fk_solver.solve(angles)
             return np.sum(np.power(x, 2))
 
-        self._g = autograd.grad(distance_squared, argnum=1)
-        self._h = autograd.hessian(distance_squared, argnum=1)
+        self._g = autograd.grad(distance_squared)
+        self._h = autograd.hessian(distance_squared)
 
     def solve(self, target, angles0, tol=1.48e-08, maxiter=50):
         """Calculate joint angles and returns it."""
         angles = np.array(angles0)
         for _ in range(maxiter):
             delta = np.linalg.solve(
-                self._h(target, angles), -self._g(target, angles))
+                self._h(angles, target), -self._g(angles, target))
             angles = angles + delta
             if np.linalg.norm(delta) < tol:
                 break
