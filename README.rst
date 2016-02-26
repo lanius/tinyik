@@ -8,7 +8,7 @@ It defines an actuator as a set of links and revolute joints along x-axis from a
 .. code-block:: python
 
     >>> import tinyik
-    >>> arm = tinyik.Actuator('z', 1., 'z', 1.)
+    >>> arm = tinyik.Actuator(['z', 1., 'z', 1.])
 
 Since the joint angles are zero by default, the end-effector position is at (2.0, 0, 0):
 
