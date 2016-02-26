@@ -16,6 +16,8 @@ class Actuator(object):
         components = []
         for t in tokens:
             if isinstance(t, Number):
+                components.append(Link([t, 0., 0.]))
+            elif isinstance(t, list) or isinstance(t, np.ndarray):
                 components.append(Link(t))
             elif isinstance(t, str) and t in {'x', 'y', 'z'}:
                 components.append(Joint(t))
@@ -97,16 +99,17 @@ class IKSolver(object):
 class Link(object):
     """Represents a link."""
 
-    def __init__(self, length):
-        """Create a link from a specified length."""
-        self.length = length
+    def __init__(self, coord):
+        """Create a link from a specified coordinate."""
+        self.coord = coord
 
     def matrix(self, _):
         """Return translation matrix in homogeneous coordinates."""
+        x, y, z = self.coord
         return np.array([
-            [1., 0., 0., self.length],
-            [0., 1., 0., 0.],
-            [0., 0., 1., 0.],
+            [1., 0., 0., x],
+            [0., 1., 0., y],
+            [0., 0., 1., z],
             [0., 0., 0., 1.]
         ])
 

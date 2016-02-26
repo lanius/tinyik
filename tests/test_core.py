@@ -22,6 +22,9 @@ def test_actuator_instantiation():
     assert all(three_joints_arm.angles == 0.)
     assert all(three_joints_arm.ee == [3., 0., 0.])
 
+    y_axis_dir_arm = Actuator(['z', [0., 1., 0.], 'z', [0., 1., 0.]])
+    assert all(y_axis_dir_arm.ee == [0., 2., 0.])
+
 
 def test_actuator_angles():
     arm = Actuator(['z', 1., 'y', 1.])
@@ -38,7 +41,9 @@ def test_actuator_ee():
 
 
 def test_forward_kinematics():
-    fk = FKSolver([Joint('z'), Link(1.), Joint('y'), Link(1.)])
+    fk = FKSolver([
+        Joint('z'), Link([1., 0., 0.]), Joint('y'), Link([1., 0., 0.])
+    ])
     assert all(fk.solve([0., 0.]) == [2., 0., 0.])
 
     assert approx_eq(fk.solve([theta, theta]), [x, y, -z])
@@ -46,7 +51,9 @@ def test_forward_kinematics():
 
 
 def test_inverse_kinematics_with_newton():
-    fk = FKSolver([Joint('z'), Link(1.), Joint('y'), Link(1.)])
+    fk = FKSolver([
+        Joint('z'), Link([1., 0., 0.]), Joint('y'), Link([1., 0., 0.])
+    ])
     ik = IKSolver(fk, NewtonOptimizer)
     assert approx_eq(ik.solve([theta, theta], [2., 0., 0.]), [0., 0.])
 
@@ -55,7 +62,9 @@ def test_inverse_kinematics_with_newton():
 
 
 def test_inverse_kinematics_with_sd():
-    fk = FKSolver([Joint('z'), Link(1.), Joint('y'), Link(1.)])
+    fk = FKSolver([
+        Joint('z'), Link([1., 0., 0.]), Joint('y'), Link([1., 0., 0.])
+    ])
     ik = IKSolver(fk, SDOptimizer, {'maxiter': 100, 'alpha': 0.1})
     assert approx_eq(ik.solve([theta, theta], [2., 0., 0.]), [0., 0.])
 
