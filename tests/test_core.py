@@ -51,19 +51,19 @@ def test_forward_kinematics():
 def test_inverse_kinematics():
     fk = FKSolver([Joint('z'), Link(1.), Joint('y'), Link(1.)])
     ik = IKSolver(fk)
-    assert approx_eq(ik.solve([2., 0., 0.], [theta, theta]), [0., 0.])
+    assert approx_eq(ik.solve([theta, theta], [2., 0., 0.]), [0., 0.])
 
-    assert approx_eq(ik.solve([x, y, -z], [0., 0.]), [theta, theta])
-    assert approx_eq(ik.solve([x, -y, z], [0., 0.]), [-theta, -theta])
+    assert approx_eq(ik.solve([0., 0.], [x, y, -z]), [theta, theta])
+    assert approx_eq(ik.solve([0., 0.], [x, -y, z]), [-theta, -theta])
 
 
 def test_sd_optimizer():
     fk = FKSolver([Joint('z'), Link(1.), Joint('y'), Link(1.)])
     ik = IKSolver(fk, SDOptimizer, {'maxiter': 100, 'alpha': 0.1})
-    assert approx_eq(ik.solve([2., 0., 0.], [theta, theta]), [0., 0.])
+    assert approx_eq(ik.solve([theta, theta], [2., 0., 0.]), [0., 0.])
 
-    assert approx_eq(ik.solve([x, y, -z], [0., 0.]), [theta, theta])
-    assert approx_eq(ik.solve([x, -y, z], [0., 0.]), [-theta, -theta])
+    assert approx_eq(ik.solve([0., 0.], [x, y, -z]), [theta, theta])
+    assert approx_eq(ik.solve([0., 0.], [x, -y, z]), [-theta, -theta])
 
 
 def approx_eq(a, b):

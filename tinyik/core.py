@@ -47,7 +47,7 @@ class Actuator(object):
 
     @ee.setter
     def ee(self, position):
-        self.angles = self._ik.solve(position, self.angles)
+        self.angles = self._ik.solve(self.angles, position)
 
 
 class FKSolver(object):
@@ -130,7 +130,7 @@ class IKSolver(object):
             opt_params = {}
         self.optimizer = opt_cls(distance_squared, **opt_params)
 
-    def solve(self, target, angles0):
+    def solve(self, angles0, target):
         """Calculate joint angles and returns it."""
         return self.optimizer.optimize(np.array(angles0), target)
 
