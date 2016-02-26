@@ -12,26 +12,26 @@ theta = np.pi / 6
 
 
 def test_actuator_instantiation():
-    two_joints_arm = Actuator('z', 1., 'z', 1.)
+    two_joints_arm = Actuator(['z', 1., 'z', 1.])
     assert len(two_joints_arm.angles) == 2
     assert all(two_joints_arm.angles == 0.)
     assert all(two_joints_arm.ee == [2., 0., 0.])
 
-    three_joints_arm = Actuator('x', 1., 'y', 1., 'z', 1.)
+    three_joints_arm = Actuator(['x', 1., 'y', 1., 'z', 1.])
     assert len(three_joints_arm.angles) == 3
     assert all(three_joints_arm.angles == 0.)
     assert all(three_joints_arm.ee == [3., 0., 0.])
 
 
 def test_actuator_angles():
-    arm = Actuator('z', 1., 'y', 1.)
+    arm = Actuator(['z', 1., 'y', 1.])
     arm.angles = [theta, theta]
     assert approx_eq(arm.angles, [theta, theta])
     assert approx_eq(arm.ee, [x, y, -z])
 
 
 def test_actuator_ee():
-    arm = Actuator('z', 1., 'y', 1.)
+    arm = Actuator(['z', 1., 'y', 1.])
     arm.ee = [x, -y, z]
     assert approx_eq(arm.ee, [x, -y, z])
     assert approx_eq(arm.angles, [-theta, -theta])

@@ -11,18 +11,18 @@ from optimizer import NewtonOptimizer
 class Actuator(object):
     """Represents an actuator as a set of links and revolute joints."""
 
-    def __init__(self, *args):
+    def __init__(self, tokens):
         """Create an actuator from specified link lengths and joint axes."""
         components = []
-        for arg in args:
-            if isinstance(arg, Number):
-                components.append(Link(arg))
-            elif isinstance(arg, str) and arg in {'x', 'y', 'z'}:
-                components.append(Joint(arg))
+        for t in tokens:
+            if isinstance(t, Number):
+                components.append(Link(t))
+            elif isinstance(t, str) and t in {'x', 'y', 'z'}:
+                components.append(Joint(t))
             else:
                 raise ValueError(
                     'the arguments need to be '
-                    'link length or joint axis: {}'.format(arg)
+                    'link length or joint axis: {}'.format(t)
                 )
 
         self._fk = FKSolver(components)
