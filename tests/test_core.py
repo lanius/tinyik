@@ -1,7 +1,7 @@
 import numpy as np
 
 from tinyik.core import Actuator, FKSolver, IKSolver, Link, Joint
-from tinyik.optimizer import SDOptimizer
+from tinyik.optimizer import NewtonOptimizer, SDOptimizer
 
 
 x = (3. + (2. * np.sqrt(3.))) / 4.
@@ -45,16 +45,16 @@ def test_forward_kinematics():
     assert approx_eq(fk.solve([-theta, -theta]), [x, -y, z])
 
 
-def test_inverse_kinematics():
+def test_inverse_kinematics_with_newton():
     fk = FKSolver([Joint('z'), Link(1.), Joint('y'), Link(1.)])
-    ik = IKSolver(fk)
+    ik = IKSolver(fk, NewtonOptimizer)
     assert approx_eq(ik.solve([theta, theta], [2., 0., 0.]), [0., 0.])
 
     assert approx_eq(ik.solve([0., 0.], [x, y, -z]), [theta, theta])
     assert approx_eq(ik.solve([0., 0.], [x, -y, z]), [-theta, -theta])
 
 
-def test_sd_optimizer():
+def test_inverse_kinematics_with_sd():
     fk = FKSolver([Joint('z'), Link(1.), Joint('y'), Link(1.)])
     ik = IKSolver(fk, SDOptimizer, {'maxiter': 100, 'alpha': 0.1})
     assert approx_eq(ik.solve([theta, theta], [2., 0., 0.]), [0., 0.])

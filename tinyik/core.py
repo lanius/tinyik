@@ -11,7 +11,7 @@ from optimizer import NewtonOptimizer
 class Actuator(object):
     """Represents an actuator as a set of links and revolute joints."""
 
-    def __init__(self, tokens):
+    def __init__(self, tokens, opt_cls=NewtonOptimizer, opt_params=None):
         """Create an actuator from specified link lengths and joint axes."""
         components = []
         for t in tokens:
@@ -26,7 +26,7 @@ class Actuator(object):
                 )
 
         self._fk = FKSolver(components)
-        self._ik = IKSolver(self._fk)
+        self._ik = IKSolver(self._fk, opt_cls, opt_params)
 
         self.angles = [0.] * len(
             [c for c in components if isinstance(c, Joint)]
@@ -79,7 +79,7 @@ class FKSolver(object):
 class IKSolver(object):
     """An inverse kinematics solver."""
 
-    def __init__(self, fk_solver, opt_cls=NewtonOptimizer, opt_params=None):
+    def __init__(self, fk_solver, opt_cls, opt_params=None):
         """Generate an IK solver from a FK solver instance."""
         def distance_squared(angles, target):
             x = target - fk_solver.solve(angles)
