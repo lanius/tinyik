@@ -12,7 +12,7 @@ from .optimizer import NewtonOptimizer
 class Actuator(object):
     """Represents an actuator as a set of links and revolute joints."""
 
-    def __init__(self, tokens, opt_cls=NewtonOptimizer, opt_params=None):
+    def __init__(self, tokens, optimizer=NewtonOptimizer()):
         """Create an actuator from specified link lengths and joint axes."""
         components = []
         for t in tokens:
@@ -29,7 +29,7 @@ class Actuator(object):
                 )
 
         self._fk = FKSolver(components)
-        self._ik = IKSolver(self._fk, opt_cls, opt_params)
+        self._ik = IKSolver(self._fk, optimizer)
 
         self.angles = [0.] * len(
             [c for c in components if isinstance(c, Joint)]

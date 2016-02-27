@@ -58,7 +58,7 @@ def test_inverse_kinematics_with_newton():
     fk = FKSolver([
         Joint('z'), Link([1., 0., 0.]), Joint('y'), Link([1., 0., 0.])
     ])
-    ik = IKSolver(fk, NewtonOptimizer)
+    ik = IKSolver(fk, NewtonOptimizer())
     assert approx_eq(ik.solve([theta, theta], [2., 0., 0.]), [0., 0.])
 
     assert approx_eq(ik.solve([0., 0.], [x, y, -z]), [theta, theta])
@@ -69,7 +69,7 @@ def test_inverse_kinematics_with_sd():
     fk = FKSolver([
         Joint('z'), Link([1., 0., 0.]), Joint('y'), Link([1., 0., 0.])
     ])
-    ik = IKSolver(fk, SDOptimizer, {'maxiter': 100, 'alpha': 0.1})
+    ik = IKSolver(fk, SDOptimizer(maxiter=100, alpha=0.1))
     assert approx_eq(ik.solve([theta, theta], [2., 0., 0.]), [0., 0.])
 
     assert approx_eq(ik.solve([0., 0.], [x, y, -z]), [theta, theta])

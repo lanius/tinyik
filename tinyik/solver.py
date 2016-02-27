@@ -35,15 +35,14 @@ class FKSolver(object):
 class IKSolver(object):
     """An inverse kinematics solver."""
 
-    def __init__(self, fk_solver, opt_cls, opt_params=None):
+    def __init__(self, fk_solver, optimizer):
         """Generate an IK solver from a FK solver instance."""
         def distance_squared(angles, target):
             x = target - fk_solver.solve(angles)
             return np.sum(np.power(x, 2))
 
-        if opt_params is None:
-            opt_params = {}
-        self.optimizer = opt_cls(distance_squared, **opt_params)
+        optimizer.prepare(distance_squared)
+        self.optimizer = optimizer
 
     def solve(self, angles0, target):
         """Calculate joint angles and returns it."""
