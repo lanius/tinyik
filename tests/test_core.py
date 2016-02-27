@@ -1,7 +1,11 @@
 import numpy as np
 
-from tinyik.core import Actuator, FKSolver, IKSolver, Link, Joint
-from tinyik.optimizer import NewtonOptimizer, SDOptimizer
+from tinyik import (
+    Actuator,
+    Link, Joint,
+    FKSolver, IKSolver,
+    NewtonOptimizer, SDOptimizer
+)
 
 
 x = (3. + (2. * np.sqrt(3.))) / 4.
