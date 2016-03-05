@@ -28,7 +28,7 @@ class NewtonOptimizer(object):
         return x
 
 
-class SDOptimizer(object):
+class SteepestDescentOptimizer(object):
     """An optimizer based on steepest descent method."""
 
     def __init__(self, tol=1.48e-08, maxiter=50, alpha=1):

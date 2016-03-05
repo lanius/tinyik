@@ -3,12 +3,12 @@
 from .core import Actuator
 from .component import Link, Joint
 from .solver import FKSolver, IKSolver
-from .optimizer import NewtonOptimizer, SDOptimizer
+from .optimizer import NewtonOptimizer, SteepestDescentOptimizer
 
 
 __all__ = (
     'Actuator',
     'Link', 'Joint',
     'FKSolver', 'IKSolver',
-    'NewtonOptimizer', 'SDOptimizer'
+    'NewtonOptimizer', 'SteepestDescentOptimizer'
 )
