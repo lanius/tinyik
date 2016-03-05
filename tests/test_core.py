@@ -4,7 +4,7 @@ from tinyik import (
     Actuator,
     Link, Joint,
     FKSolver, IKSolver,
-    NewtonOptimizer, SteepestDescentOptimizer
+    NewtonOptimizer, SteepestDescentOptimizer, ConjugateGradientOptimizer
 )
 
 
@@ -65,11 +65,22 @@ def test_inverse_kinematics_with_newton():
     assert approx_eq(ik.solve([0., 0.], [x, -y, z]), [-theta, -theta])
 
 
-def test_inverse_kinematics_with_sd():
+def test_inverse_kinematics_with_steepest_descent():
     fk = FKSolver([
         Joint('z'), Link([1., 0., 0.]), Joint('y'), Link([1., 0., 0.])
     ])
     ik = IKSolver(fk, SteepestDescentOptimizer(maxiter=100, alpha=0.1))
+    assert approx_eq(ik.solve([theta, theta], [2., 0., 0.]), [0., 0.])
+
+    assert approx_eq(ik.solve([0., 0.], [x, y, -z]), [theta, theta])
+    assert approx_eq(ik.solve([0., 0.], [x, -y, z]), [-theta, -theta])
+
+
+def test_inverse_kinematics_with_conjugate_gradient():
+    fk = FKSolver([
+        Joint('z'), Link([1., 0., 0.]), Joint('y'), Link([1., 0., 0.])
+    ])
+    ik = IKSolver(fk, ConjugateGradientOptimizer())
     assert approx_eq(ik.solve([theta, theta], [2., 0., 0.]), [0., 0.])
 
     assert approx_eq(ik.solve([0., 0.], [x, y, -z]), [theta, theta])
