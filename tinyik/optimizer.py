@@ -3,6 +3,7 @@
 import autograd.numpy as np
 import autograd
 
+import scipy.optimize
 
 class NewtonOptimizer(object):
     """An optimizer based on Newton's method."""
@@ -83,3 +84,56 @@ class ConjugateGradientOptimizer(object):
             if np.linalg.norm(delta) < self.tol:
                 break
         return x
+
+class Scipy_Minimize(object):
+    """An optimizer based on scipy.optimize.minimize."""
+
+    def __init__(self, tol=1.48e-08, maxiter=50, method='BFGS'):
+        """Generate an optimizer from an objective function."""
+        self.tol = tol
+        self.maxiter = maxiter
+        self.method = method
+
+    def prepare(self, f):
+        """Accept an objective function for optimization."""
+        self.f = f
+
+    def optimize(self, angles0, target):
+        """Calculate an optimum argument of an objective function."""
+        def new_objective(angles, target=target):
+            return self.f(angles, target)
+
+        return scipy.optimize.minimize(new_objective,angles0,
+                                       method=self.method,
+                                       tol=self.tol,
+                                       options={'maxiter':self.maxiter}).x
+
+class Scipy_Minimize_Smooth(object):
+    """An optimizer based on scipy.optimize.minimize."""
+
+    def __init__(self, tol=1.48e-08, maxiter=50, bounds=None,
+                 smooth_factor=0.1, method='L-BFGS-B'):
+        """Generate an optimizer from an objective function."""
+        self.tol = tol
+        self.maxiter = maxiter
+        self.bounds = bounds
+        self.smooth_factor = smooth_factor
+        self.method = method
+
+    def prepare(self, f):
+        """Accept an objective function for optimization."""
+        self.f = f
+
+    def optimize(self, angles0, target):
+        """Calculate an optimum argument of an objective function."""
+        def new_objective(angles, target=target):
+            a = angles - angles0
+            return self.f(angles, target)+self.smooth_factor*np.sum(np.power(a, 2))
+
+        # return scipy.optimize.minimize(new_objective,angles0,method='BFGS',options={'gtol':1.48e-08}).x
+        return scipy.optimize.minimize(new_objective,angles0,
+                                       method=self.method,
+                                       bounds=self.bounds,
+                                       tol=self.tol,
+                                       options={'maxiter':self.maxiter}).x
+        
