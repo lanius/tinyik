@@ -45,3 +45,8 @@ Installation
 .. code-block:: console
 
     $ pip install tinyik
+
+However, if you want to install the version on this repository (my personal fork), um must download it and then:
+.. code-block:: console
+
+    $ pip install path_to_tinyik
