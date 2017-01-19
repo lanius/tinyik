@@ -46,7 +46,7 @@ Installation
 
     $ pip install tinyik
 
-However, if you want to install the version on this repository (my personal fork), um must download it and then:  
+However, if you want to install the version on this repository (my personal fork), you must download it and then:  
 
 .. code-block:: console
 
