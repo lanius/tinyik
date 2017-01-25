@@ -89,11 +89,15 @@ class ConjugateGradientOptimizer(object):
 class ScipyOptimizer(object):
     """An optimizer based on scipy.optimize.minimize."""
 
-    def __init__(self, tol=1.48e-08, maxiter=50, method='BFGS'):
+    def __init__(self, **optimizer_opt):
         """Generate an optimizer from an objective function."""
-        self.tol = tol
-        self.maxiter = maxiter
-        self.method = method
+        for k, v in [  # default values
+                ('method', 'BFGS'),
+                ('tol', 1.48e-08),
+                ('options', {'maxiter': 50})]:
+            if k not in optimizer_opt:
+                optimizer_opt[k] = v
+        self.optimizer_opt = optimizer_opt
 
     def prepare(self, f):
         """Accept an objective function for optimization."""
@@ -104,43 +108,38 @@ class ScipyOptimizer(object):
         def new_objective(angles):
             return self.f(angles, target)
 
-        return scipy.optimize.minimize(new_objective,
-                                       angles0,
-                                       method=self.method,
-                                       tol=self.tol,
-                                       options={'maxiter': self.maxiter}).x
+        return scipy.optimize.minimize(
+            new_objective,
+            angles0,
+            **self.optimizer_opt).x
 
 
-class ScipySmoothOptimizer(object):
+class ScipySmoothOptimizer(ScipyOptimizer):
     """A smooth optimizer based on scipy.optimize.minimize."""
 
-    def __init__(self, tol=1.48e-08, maxiter=50, bounds=None,
-                 smooth_factor=0.1, method='L-BFGS-B'):
+    def __init__(self, smooth_factor=.1, **optimizer_opt):
         """Generate an optimizer from an objective function."""
-        self.tol = tol
-        self.maxiter = maxiter
-        self.bounds = bounds
         self.smooth_factor = smooth_factor
-        self.method = method
-
-    def prepare(self, f):
-        """Accept an objective function for optimization."""
-        self.f = f
+        for k, v in [  # default values
+                ('method', 'L-BFGS-B'),
+                ('bounds', None)]:
+            if k not in optimizer_opt:
+                optimizer_opt[k] = v
+        super(ScipySmoothOptimizer, self).__init__(**optimizer_opt)
 
     def optimize(self, angles0, target):
         """Calculate an optimum argument of an objective function."""
-        def new_objective(angles, target=target):
+        def new_objective(angles):
             a = angles - angles0
             if type(self.smooth_factor) is np.ndarray or type(self.smooth_factor) is list:
                 if len(a) == len(self.smooth_factor):
-                    return self.f(angles, target)+np.sum(self.smooth_factor*np.power(a, 2))
+                    return self.f(angles, target) + np.sum(self.smooth_factor * np.power(a, 2))
                 else:
-                    raise ValueError('len(smooth_factor)!=number of joints')
+                    raise ValueError('len(smooth_factor) != number of joints')
             else:
-                return self.f(angles, target)+self.smooth_factor*np.sum(np.power(a, 2))
+                return self.f(angles, target) + self.smooth_factor * np.sum(np.power(a, 2))
 
-        return scipy.optimize.minimize(new_objective, angles0,
-                                       method=self.method,
-                                       bounds=self.bounds,
-                                       tol=self.tol,
-                                       options={'maxiter': self.maxiter}).x
+        return scipy.optimize.minimize(
+            new_objective,
+            angles0,
+            **self.optimizer_opt).x
