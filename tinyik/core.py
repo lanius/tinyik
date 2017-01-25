@@ -6,34 +6,14 @@ import autograd.numpy as np
 
 from .component import Link, Joint
 from .solver import FKSolver, IKSolver
-from .optimizer import NewtonOptimizer, \
-SteepestDescentOptimizer, ConjugateGradientOptimizer, Scipy_Minimize, Scipy_Minimize_Smooth
+from .optimizer import ScipyOptimizer
 
 
 class Actuator(object):
     """Represents an actuator as a set of links and revolute joints."""
 
-    def __init__(self, tokens, optimizer='Scipy_Minimize', **optimizer_opt):
+    def __init__(self, tokens, optimizer=ScipyOptimizer()):
         """Create an actuator from specified link lengths and joint axes."""
-        if optimizer == 'NewtonOptimizer':
-            optimizer = NewtonOptimizer(**optimizer_opt)
-        elif optimizer == 'SteepestDescentOptimizer':
-            optimizer = SteepestDescentOptimizer(**optimizer_opt)
-        elif optimizer == 'ConjugateGradientOptimizer':
-            optimizer = ConjugateGradientOptimizer(**optimizer_opt)
-        elif optimizer == 'Scipy_Minimize':
-            optimizer = Scipy_Minimize(**optimizer_opt)
-        elif optimizer == 'Scipy_Minimize_Smooth':
-            optimizer = Scipy_Minimize_Smooth(**optimizer_opt)
-        else:
-            raise ValueError(
-                'the optimizer argument must be one of these: '
-                'NewtonOptimizer,'
-                'SteepestDescentOptimizer,'
-                'ConjugateGradientOptimizer,'
-                'Scipy_Minimize,'
-                'Scipy_Minimize_Smooth.'
-            )
         components = []
         for t in tokens:
             if isinstance(t, Number):

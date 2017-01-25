@@ -4,7 +4,8 @@ from .core import Actuator
 from .component import Link, Joint
 from .solver import FKSolver, IKSolver
 from .optimizer import (
-    NewtonOptimizer, SteepestDescentOptimizer, ConjugateGradientOptimizer
+    NewtonOptimizer, SteepestDescentOptimizer, ConjugateGradientOptimizer,
+    ScipyOptimizer, ScipySmoothOptimizer
 )
 
 
@@ -13,5 +14,6 @@ __all__ = (
     'Link', 'Joint',
     'FKSolver', 'IKSolver',
     'NewtonOptimizer', 'SteepestDescentOptimizer',
-    'ConjugateGradientOptimizer'
+    'ConjugateGradientOptimizer',
+    'ScipyOptimizer', 'ScipySmoothOptimizer'
 )

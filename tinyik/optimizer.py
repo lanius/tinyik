@@ -2,8 +2,8 @@
 
 import autograd.numpy as np
 import autograd
-
 import scipy.optimize
+
 
 class NewtonOptimizer(object):
     """An optimizer based on Newton's method."""
@@ -85,7 +85,8 @@ class ConjugateGradientOptimizer(object):
                 break
         return x
 
-class Scipy_Minimize(object):
+
+class ScipyOptimizer(object):
     """An optimizer based on scipy.optimize.minimize."""
 
     def __init__(self, tol=1.48e-08, maxiter=50, method='BFGS'):
@@ -100,16 +101,18 @@ class Scipy_Minimize(object):
 
     def optimize(self, angles0, target):
         """Calculate an optimum argument of an objective function."""
-        def new_objective(angles, target=target):
+        def new_objective(angles):
             return self.f(angles, target)
 
-        return scipy.optimize.minimize(new_objective,angles0,
+        return scipy.optimize.minimize(new_objective,
+                                       angles0,
                                        method=self.method,
                                        tol=self.tol,
-                                       options={'maxiter':self.maxiter}).x
+                                       options={'maxiter': self.maxiter}).x
 
-class Scipy_Minimize_Smooth(object):
-    """An optimizer based on scipy.optimize.minimize."""
+
+class ScipySmoothOptimizer(object):
+    """A smooth optimizer based on scipy.optimize.minimize."""
 
     def __init__(self, tol=1.48e-08, maxiter=50, bounds=None,
                  smooth_factor=0.1, method='L-BFGS-B'):
@@ -129,16 +132,15 @@ class Scipy_Minimize_Smooth(object):
         def new_objective(angles, target=target):
             a = angles - angles0
             if type(self.smooth_factor) is np.ndarray or type(self.smooth_factor) is list:
-                if len(a)==len(self.smooth_factor):
+                if len(a) == len(self.smooth_factor):
                     return self.f(angles, target)+np.sum(self.smooth_factor*np.power(a, 2))
                 else:
                     raise ValueError('len(smooth_factor)!=number of joints')
             else:
                 return self.f(angles, target)+self.smooth_factor*np.sum(np.power(a, 2))
 
-        # return scipy.optimize.minimize(new_objective,angles0,method='BFGS',options={'gtol':1.48e-08}).x
-        return scipy.optimize.minimize(new_objective,angles0,
+        return scipy.optimize.minimize(new_objective, angles0,
                                        method=self.method,
                                        bounds=self.bounds,
                                        tol=self.tol,
-                                       options={'maxiter':self.maxiter}).x
+                                       options={'maxiter': self.maxiter}).x
