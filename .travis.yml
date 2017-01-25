@@ -11,6 +11,6 @@ install:
 before_script:
   - python setup.py check -m -r -s
   - flake8 .
-  - pydocstyle .
+  - pydocstyle . --match-dir=(?!.*tests).*
 script:
   - pytest
