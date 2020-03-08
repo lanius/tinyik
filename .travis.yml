@@ -2,15 +2,14 @@ language: python
 python:
   - 2.7
   - 3.5
+  - 3.6
+  - 3.7
+  - 3.8
 before_install:
   - sudo apt-get install gfortran libopenblas-dev liblapack-dev
+  - pip install poetry
 install:
-  - pip install readme flake8 pydocstyle
-  - pip install numpy -U
-  - pip install .
-before_script:
-  - python setup.py check -m -r -s
-  - flake8 .
-  - pydocstyle . --match-dir='(?!.*tests).*'
+  - poetry install
 script:
-  - pytest
+  - poetry run flake8
+  - poetry run pytest
