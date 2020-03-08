@@ -1,7 +1,7 @@
-Tinyik
+tinyik
 ======
 
-Tinyik is a simple and naive inverse kinematics solver.
+tinyik is a simple and naive inverse kinematics solver.
 
 It defines the actuator as a set of links and revolute joints from an origin. Here is the example of a robot arm that consists of two joints that rotate around z-axis and two links of 1.0 length along x-axis:
 
