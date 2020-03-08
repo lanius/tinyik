@@ -1,9 +1,9 @@
-Tinyik
+tinyik
 ======
 
-Tinyik is a simple and naive inverse kinematics solver.
+tinyik is a simple and naive inverse kinematics solver.
 
-It defines an actuator as a set of links and revolute joints from an origin. Here is an example of a robot arm that consists of two joints that rotate around z-axis and two links of 1.0 length along x-axis:
+It defines the actuator as a set of links and revolute joints from an origin. Here is the example of a robot arm that consists of two joints that rotate around z-axis and two links of 1.0 length along x-axis:
 
 .. code-block:: python
 
@@ -38,6 +38,23 @@ Sets a position of the end-effector to calculate the joint angles:
     >>> np.round(np.rad2deg(arm.angles))
     array([ 45.,   0.])
 
+Optionally, it has the visualization feature. Passes the actuator to it to visualize its structure:
+
+.. code-block:: python
+
+    >>> leg = tinyik.Actuator([[.3, .0, .0], 'z', [.3, .0, .0], 'x', [.0, -.5, .0], 'x', [.0, -.5, .0]])
+    >>> leg.angles = np.deg2rad([30, 45, -90])
+    >>> tinyik.visualize(leg)
+
+.. image:: https://raw.githubusercontent.com/lanius/tinyik/master/assets/viz_structure.png
+
+Passes with the target position, can compare before and after the IK. The gray links are before IK and the white links are after it. The red sphere is the target position:
+
+.. code-block:: python
+
+    >>> tinyik.visualize(leg, target=[.8, .0, .8])
+
+.. image:: https://raw.githubusercontent.com/lanius/tinyik/master/assets/viz_ik.png
 
 Installation
 ------------
@@ -45,3 +62,9 @@ Installation
 .. code-block:: console
 
     $ pip install tinyik
+
+With the visualization feature:
+
+.. code-block:: console
+
+    $ pip install tinyik[viz]

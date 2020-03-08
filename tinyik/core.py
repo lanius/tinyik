@@ -34,6 +34,7 @@ class Actuator(object):
         self.angles = [0.] * len(
             [c for c in components if isinstance(c, Joint)]
         )
+        self.components = components
 
     @property
     def angles(self):

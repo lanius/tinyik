@@ -7,6 +7,7 @@ from .optimizer import (
     NewtonOptimizer, SteepestDescentOptimizer, ConjugateGradientOptimizer,
     ScipyOptimizer, ScipySmoothOptimizer
 )
+from .visualizer import visualize
 
 
 __all__ = (
@@ -15,5 +16,6 @@ __all__ = (
     'FKSolver', 'IKSolver',
     'NewtonOptimizer', 'SteepestDescentOptimizer',
     'ConjugateGradientOptimizer',
-    'ScipyOptimizer', 'ScipySmoothOptimizer'
+    'ScipyOptimizer', 'ScipySmoothOptimizer',
+    'visualize'
 )
