@@ -28,8 +28,8 @@ class Actuator(object):
                     'link length or joint axis: {}'.format(t)
                 )
 
-        self._fk = FKSolver(components)
-        self._ik = IKSolver(self._fk, optimizer)
+        self.fk = FKSolver(components)
+        self.ik = IKSolver(self.fk, optimizer)
 
         self.angles = [0.] * len(
             [c for c in components if isinstance(c, Joint)]
@@ -48,8 +48,8 @@ class Actuator(object):
     @property
     def ee(self):
         """The end-effector position."""
-        return self._fk.solve(self.angles)
+        return self.fk.solve(self.angles)
 
     @ee.setter
     def ee(self, position):
-        self.angles = self._ik.solve(self.angles, position)
+        self.angles = self.ik.solve(self.angles, position)
