@@ -1,4 +1,4 @@
-from tinyik import Link, Joint, FKSolver, CCDFKSolver, CCDIKSolver
+from tinyik import Link, Joint, FKSolver, CCDIKSolver
 
 from .utils import x, y, z, theta, approx_eq
 
@@ -16,7 +16,7 @@ def test_fk():
 
 
 def test_ccd_fk():
-    fk = CCDFKSolver(components)
+    fk = FKSolver(components)
     assert all(fk.solve([0., 0.]) == predicted)
 
     assert approx_eq(fk.solve([theta, theta]), [x, y, -z])
@@ -24,7 +24,7 @@ def test_ccd_fk():
 
 
 def test_ccd_ik():
-    fk = CCDFKSolver(components)
+    fk = FKSolver(components)
     ik = CCDIKSolver(fk)
     assert approx_eq(ik.solve([0., 0.], [x, y, -z]), [theta, theta])
     assert approx_eq(ik.solve([0., 0.], [x, -y, z]), [-theta, -theta])

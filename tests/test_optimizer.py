@@ -2,7 +2,7 @@ import numpy as np
 
 from tinyik import (
     Link, Joint,
-    FKSolver, IKSolver,
+    FKSolver, OptimizationBasedIKSolver,
     NewtonOptimizer,
     SteepestDescentOptimizer,
     ConjugateGradientOptimizer,
@@ -16,7 +16,7 @@ def build_ik_solver(optimizer_instance):
     fk = FKSolver([
         Joint('z'), Link([1., 0., 0.]), Joint('y'), Link([1., 0., 0.])
     ])
-    return IKSolver(fk, optimizer_instance)
+    return OptimizationBasedIKSolver(fk, optimizer_instance)
 
 
 def test_inverse_kinematics_with_newton():
