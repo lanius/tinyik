@@ -9,7 +9,7 @@ from .solver import FKSolver, IKSolver
 from .optimizer import ScipyOptimizer
 
 
-class Actuator(object):
+class Actuator:
     """Represents an actuator as a set of links and revolute joints."""
 
     def __init__(self, tokens, optimizer=ScipyOptimizer()):

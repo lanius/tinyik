@@ -5,7 +5,7 @@ import autograd
 import scipy.optimize
 
 
-class NewtonOptimizer(object):
+class NewtonOptimizer:
     """An optimizer based on Newton's method."""
 
     def __init__(self, tol=1.48e-08, maxiter=50):
@@ -29,7 +29,7 @@ class NewtonOptimizer(object):
         return x
 
 
-class SteepestDescentOptimizer(object):
+class SteepestDescentOptimizer:
     """An optimizer based on steepest descent method."""
 
     def __init__(self, tol=1.48e-08, maxiter=50, alpha=1):
@@ -53,7 +53,7 @@ class SteepestDescentOptimizer(object):
         return x
 
 
-class ConjugateGradientOptimizer(object):
+class ConjugateGradientOptimizer:
     """An optimizer based on conjugate gradient method."""
 
     def __init__(self, tol=1.48e-08, maxiter=50):
@@ -86,7 +86,7 @@ class ConjugateGradientOptimizer(object):
         return x
 
 
-class ScipyOptimizer(object):
+class ScipyOptimizer:
     """An optimizer based on scipy.optimize.minimize."""
 
     def __init__(self, **optimizer_opt):

@@ -8,7 +8,7 @@ import autograd.numpy as np
 from .component import Joint
 
 
-class FKSolver(object):
+class FKSolver:
     """A forward kinematics solver."""
 
     def __init__(self, components):
@@ -78,7 +78,7 @@ class CCDFKSolver(object):
         )[:3]
 
 
-class CCDIKSolver(object):
+class CCDIKSolver:
 
     def __init__(self, fk_solver, tol=1.48e-08, maxiter=50):
         self._fk_solver = fk_solver

@@ -3,7 +3,7 @@
 import autograd.numpy as np
 
 
-class Link(object):
+class Link:
     """Represents a link."""
 
     def __init__(self, coord):
@@ -21,7 +21,7 @@ class Link(object):
         ])
 
 
-class Joint(object):
+class Joint:
     """Represents a revolute joint."""
 
     def __init__(self, axis):
