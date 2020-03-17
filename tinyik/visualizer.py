@@ -1,7 +1,7 @@
 import numpy as np
 
-try:
-    import open3d as o3d  # the extra feature
+try:  # the extra feature
+    import open3d as o3d
 except ImportError:
     pass
 
@@ -9,33 +9,33 @@ except ImportError:
 def translate(p):
     x, y, z = p
     return np.array([
-            [1., 0., 0., x],
-            [0., 1., 0., y],
-            [0., 0., 1., z],
-            [0., 0., 0., 1.]
-        ])
+        [1., 0., 0., x],
+        [0., 1., 0., y],
+        [0., 0., 1., z],
+        [0., 0., 0., 1.]
+    ])
 
 
 def rotate(axis, angle):
     x, y, z = axis
     return np.array([  # Rodrigues
-            [
-                np.cos(angle) + (x**2 * (1 - np.cos(angle))),
-                (x * y * (1 - np.cos(angle))) - (z * np.sin(angle)),
-                (x * z * (1 - np.cos(angle))) + (y * np.sin(angle)),
-                0.
-            ], [
-                (y * x * (1 - np.cos(angle))) + (z * np.sin(angle)),
-                np.cos(angle) + (y**2 * (1 - np.cos(angle))),
-                (y * z * (1 - np.cos(angle))) - (x * np.sin(angle)),
-                0.
-            ], [
-                (z * x * (1 - np.cos(angle))) - (y * np.sin(angle)),
-                (z * y * (1 - np.cos(angle))) + (x * np.sin(angle)),
-                np.cos(angle) + (z**2 * (1 - np.cos(angle))),
-                0.
-            ], [0., 0., 0., 1.]
-        ])
+        [
+            np.cos(angle) + (x**2 * (1 - np.cos(angle))),
+            (x * y * (1 - np.cos(angle))) - (z * np.sin(angle)),
+            (x * z * (1 - np.cos(angle))) + (y * np.sin(angle)),
+            0.
+        ], [
+            (y * x * (1 - np.cos(angle))) + (z * np.sin(angle)),
+            np.cos(angle) + (y**2 * (1 - np.cos(angle))),
+            (y * z * (1 - np.cos(angle))) - (x * np.sin(angle)),
+            0.
+        ], [
+            (z * x * (1 - np.cos(angle))) - (y * np.sin(angle)),
+            (z * y * (1 - np.cos(angle))) + (x * np.sin(angle)),
+            np.cos(angle) + (z**2 * (1 - np.cos(angle))),
+            0.
+        ], [0., 0., 0., 1.]
+    ])
 
 
 def create_sphere(p, r=.1, color=None):
