@@ -103,12 +103,13 @@ class Joint(GeoComponent):
         geo = o3d.geometry.TriangleMesh.create_cylinder(radius=.1, height=.2)
         geo.compute_vertex_normals()
         geo.paint_uniform_color([.2, .2, .9])
-        rx = {
-            'x': [0., 1., 0.],
-            'y': [1., 0., 0.],
-            'z': [0., 0., 1.],
-        }
-        geo.transform(rotate(rx[self.c.axis], np.pi / 2))
+        org = [0., 0., 1.]
+        dot = np.dot(org, self.c.axis)
+        cross = np.cross(org, self.c.axis)
+        if abs(dot) != 1:
+            angle = np.arccos(dot)
+            axis = cross / np.linalg.norm(cross)
+            geo.transform(rotate(axis, angle))
         return geo
 
     def mat(self):

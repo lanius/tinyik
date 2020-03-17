@@ -26,37 +26,42 @@ class Joint:
 
     def __init__(self, axis):
         """Create a revolute joint from a specified axis."""
-        self.axis = axis
+        if isinstance(axis, str) and axis in {'x', 'y', 'z', '-x', '-y', '-z'}:
+            self.axis = {
+                'x': [1., 0., 0.],
+                'y': [0., 1., 0.],
+                'z': [0., 0., 1.],
+                '-x': [-1., 0., 0.],
+                '-y': [0., -1., 0.],
+                '-z': [0., 0., -1.]
+                }[axis]
+        else:
+            axis_norm = np.linalg.norm(axis)
+            self.axis = axis if axis_norm == 1 else (axis / axis_norm)
+        self.angle = 0.
 
     def matrix(self, angle):
         """Return rotation matrix in homogeneous coordinates."""
-        _rot_mat = {
-            'x': self._x_rot,
-            'y': self._y_rot,
-            'z': self._z_rot
-        }
-        return _rot_mat[self.axis](angle)
+        return self._rot(self.axis, angle)
 
-    def _x_rot(self, angle):
-        return np.array([
-            [1., 0., 0., 0.],
-            [0., np.cos(angle), -np.sin(angle), 0.],
-            [0., np.sin(angle), np.cos(angle), 0.],
-            [0., 0., 0., 1.]
+    def _rot(self, axis, angle):
+        x, y, z, = axis
+        return np.array([  # Rodrigues
+            [
+                np.cos(angle) + (x**2 * (1 - np.cos(angle))),
+                (x * y * (1 - np.cos(angle))) - (z * np.sin(angle)),
+                (x * z * (1 - np.cos(angle))) + (y * np.sin(angle)),
+                0.
+            ], [
+                (y * x * (1 - np.cos(angle))) + (z * np.sin(angle)),
+                np.cos(angle) + (y**2 * (1 - np.cos(angle))),
+                (y * z * (1 - np.cos(angle))) - (x * np.sin(angle)),
+                0.
+            ], [
+                (z * x * (1 - np.cos(angle))) - (y * np.sin(angle)),
+                (z * y * (1 - np.cos(angle))) + (x * np.sin(angle)),
+                np.cos(angle) + (z**2 * (1 - np.cos(angle))),
+                0.
+            ], [0., 0., 0., 1.]
         ])
 
-    def _y_rot(self, angle):
-        return np.array([
-            [np.cos(angle), 0., np.sin(angle), 0.],
-            [0., 1., 0., 0.],
-            [-np.sin(angle), 0., np.cos(angle), 0.],
-            [0., 0., 0., 1.]
-        ])
-
-    def _z_rot(self, angle):
-        return np.array([
-            [np.cos(angle), -np.sin(angle), 0., 0.],
-            [np.sin(angle), np.cos(angle), 0., 0.],
-            [0., 0., 1., 0.],
-            [0., 0., 0., 1.]
-        ])
