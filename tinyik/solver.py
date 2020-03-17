@@ -3,7 +3,7 @@
 from functools import reduce
 import sys
 
-import autograd.numpy as np
+import numpy as np
 
 from .component import ComponentList
 

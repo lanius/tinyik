@@ -2,7 +2,7 @@
 
 from numbers import Number
 
-import autograd.numpy as np
+import numpy as np
 
 from .component import Link, Joint, ComponentList
 from .solver import FKSolver, CCDIKSolver
