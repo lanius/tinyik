@@ -65,3 +65,29 @@ class Joint:
             ], [0., 0., 0., 1.]
         ])
 
+
+class RestrictedJoint(Joint):
+
+    def __init__(self, axis, lower_limit, upper_limit):
+        self.lower_limit = lower_limit
+        self.upper_limit = upper_limit
+        super().__init__(axis)
+
+    @property
+    def angle(self):
+        return self._angle
+
+    @angle.setter
+    def angle(self, angle):
+        self._angle = np.clip(angle, self.lower_limit, self.upper_limit)
+
+
+class ComponentList(list):
+
+    @property
+    def joints(self):
+        return [c for c in self if isinstance(c, Joint)]
+
+    @property
+    def joint_indexes(self):
+        return [self.index(j) for j in self.joints]
