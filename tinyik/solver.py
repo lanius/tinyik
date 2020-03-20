@@ -3,7 +3,7 @@
 from functools import reduce
 import sys
 
-import numpy as np
+import autograd.numpy as np
 
 from .component import ComponentList
 
@@ -31,6 +31,23 @@ class FKSolver:
             reversed(self.matrices(angles)[:index + 1]),
             np.array(p)
         )[:3]
+
+
+class OptimizationBasedIKSolver:
+    """An inverse kinematics solver."""
+
+    def __init__(self, fk_solver, optimizer):
+        """Generate an IK solver from a FK solver instance."""
+        def distance_squared(angles, target):
+            x = target - fk_solver.solve(angles)
+            return np.sum(np.power(x, 2))
+
+        optimizer.prepare(distance_squared)
+        self.optimizer = optimizer
+
+    def solve(self, angles0, target):
+        """Calculate joint angles and returns it."""
+        return self.optimizer.optimize(np.array(angles0), target)
 
 
 class CCDIKSolver:
@@ -73,20 +90,3 @@ class CCDIKSolver:
 
     def p_on_rot_plane(self, p, joint_p, joint_axis):
         return p - (np.dot(p - joint_p, joint_axis) * joint_axis)
-
-
-class OptimizationBasedIKSolver:
-    """An inverse kinematics solver."""
-
-    def __init__(self, fk_solver, optimizer):
-        """Generate an IK solver from a FK solver instance."""
-        def distance_squared(angles, target):
-            x = target - fk_solver.solve(angles)
-            return np.sum(np.power(x, 2))
-
-        optimizer.prepare(distance_squared)
-        self.optimizer = optimizer
-
-    def solve(self, angles0, target):
-        """Calculate joint angles and returns it."""
-        return self.optimizer.optimize(np.array(angles0), target)

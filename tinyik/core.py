@@ -2,10 +2,11 @@
 
 from numbers import Number
 
-import numpy as np
+import autograd.numpy as np
 
 from .component import Link, Joint, ComponentList
-from .solver import FKSolver, CCDIKSolver
+from .solver import FKSolver, OptimizationBasedIKSolver
+from .optimizer import ScipyOptimizer
 
 
 def create(tokens):
@@ -24,7 +25,7 @@ def create(tokens):
             )
 
     fk_solver = FKSolver(components)
-    ik_solver = CCDIKSolver(fk_solver)
+    ik_solver = OptimizationBasedIKSolver(fk_solver, ScipyOptimizer())
     return Actuator(components, fk_solver, ik_solver)
 
 

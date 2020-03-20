@@ -1,9 +1,8 @@
 """Components for an actuator."""
 
-try:
-    import autograd.numpy as np
-except ImportError:
-    import numpy as np
+import functools
+
+import autograd.numpy as np
 
 
 class Link:

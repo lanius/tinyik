@@ -1,4 +1,4 @@
-import numpy as np
+import autograd.numpy as np
 
 try:  # the extra feature
     import open3d as o3d

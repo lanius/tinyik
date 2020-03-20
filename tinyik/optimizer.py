@@ -1,11 +1,8 @@
 """Optimizers."""
 
-try:
-    import autograd.numpy as np
-    import autograd
-    import scipy.optimize
-except ImportError:
-    pass
+import autograd.numpy as np
+import autograd
+import scipy.optimize
 
 
 class NewtonOptimizer:
