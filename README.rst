@@ -8,7 +8,7 @@ It defines the actuator as a set of links and revolute joints from an origin. He
 .. code-block:: python
 
     >>> import tinyik
-    >>> arm = tinyik.Actuator(['z', [1., 0., 0.], 'z', [1., 0., 0.]])
+    >>> arm = tinyik.create(['z', [1., 0., 0.], 'z', [1., 0., 0.]])
 
 Since the joint angles are zero by default, the end-effector position is at (2.0, 0, 0):
 
@@ -42,13 +42,13 @@ Optionally, it has the visualization feature. Passes the actuator to it to visua
 
 .. code-block:: python
 
-    >>> leg = tinyik.Actuator([[.3, .0, .0], 'z', [.3, .0, .0], 'x', [.0, -.5, .0], 'x', [.0, -.5, .0]])
+    >>> leg = tinyik.create([[.3, .0, .0], 'z', [.3, .0, .0], 'x', [.0, -.5, .0], 'x', [.0, -.5, .0]])
     >>> leg.angles = np.deg2rad([30, 45, -90])
     >>> tinyik.visualize(leg)
 
 .. image:: https://raw.githubusercontent.com/lanius/tinyik/master/assets/viz_structure.png
 
-Passes with the target position, can compare before and after the IK. The gray links are before IK and the white links are after it. The red sphere is the target position:
+Passes with the target position, can compare before and after solving IK. The gray links are before solving IK and the white links are after it. The red sphere is the target position:
 
 .. code-block:: python
 
