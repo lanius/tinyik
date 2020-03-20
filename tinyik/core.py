@@ -40,7 +40,7 @@ class Actuator:
     @property
     def angles(self):
         """The joint angles."""
-        return [j.angle for j in self.components.joints]
+        return np.array([j.angle for j in self.components.joints])
 
     @angles.setter
     def angles(self, angles):
