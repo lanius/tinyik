@@ -8,9 +8,12 @@ import autograd.numpy as np
 class Link:
     """Represents a link."""
 
-    def __init__(self, coord):
+    def __init__(self, coord, cache_enabled=False):
         """Create a link from a specified coordinate."""
         self.coord = coord
+
+        if cache_enabled:
+            self.matrix = functools.lru_cache(self.matrix)
 
     def matrix(self, _):
         """Return translation matrix in homogeneous coordinates."""
@@ -26,7 +29,7 @@ class Link:
 class Joint:
     """Represents a revolute joint."""
 
-    def __init__(self, axis):
+    def __init__(self, axis, cache_enabled=False):
         """Create a revolute joint from a specified axis."""
         if isinstance(axis, str) and axis in {'x', 'y', 'z', '-x', '-y', '-z'}:
             self.axis = {
@@ -41,6 +44,9 @@ class Joint:
             axis_norm = np.linalg.norm(axis)
             self.axis = axis if axis_norm == 1 else (axis / axis_norm)
         self.angle = 0.
+
+        if cache_enabled:
+            self.matrix = functools.lru_cache(self.matrix)
 
     def matrix(self, angle):
         """Return rotation matrix in homogeneous coordinates."""
@@ -70,10 +76,10 @@ class Joint:
 
 class RestrictedJoint(Joint):
 
-    def __init__(self, axis, lower_limit, upper_limit):
+    def __init__(self, axis, lower_limit, upper_limit, cache_enabled=False):
         self.lower_limit = lower_limit
         self.upper_limit = upper_limit
-        super().__init__(axis)
+        super().__init__(axis, cache_enabled)
 
     @property
     def angle(self):
