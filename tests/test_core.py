@@ -30,3 +30,17 @@ def test_actuator_ee():
     arm.ee = [x, -y, z]
     assert approx_eq(arm.ee, [x, -y, z])
     assert approx_eq(arm.angles, [-theta, -theta])
+
+
+def test_multiple_actuator_ee():
+    first_arm = Actuator(
+        ['y', [0., 0., 0.01], 'x', [0., 0., 1.11], 'x', [0., 0., 1.225]])
+    second_arm = Actuator(
+        ['x', [0., 0., 1.175], 'x', [0., 0., 1.225], 'x', [0., 0., .1]])
+    angles = [0, -1, 2.5]
+    first_arm.angles = angles[:]
+    first_arm.ee = first_arm.ee + [0., 0., 0.]
+    assert approx_eq(first_arm.angles, angles)
+    first_arm.ee = first_arm.ee + [0., 0., 0.]
+    assert approx_eq(first_arm.angles, angles)
+    assert approx_eq(second_arm.angles, [0., 0., 0.])
