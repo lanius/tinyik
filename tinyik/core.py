@@ -12,7 +12,7 @@ from .optimizer import ScipyOptimizer
 class Actuator(object):
     """Represents an actuator as a set of links and revolute joints."""
 
-    def __init__(self, tokens, optimizer=ScipyOptimizer()):
+    def __init__(self, tokens, optimizer=None):
         """Create an actuator from specified link lengths and joint axes."""
         components = []
         for t in tokens:
@@ -29,7 +29,8 @@ class Actuator(object):
                 )
 
         self.fk = FKSolver(components)
-        self.ik = IKSolver(self.fk, optimizer)
+        self.ik = IKSolver(
+            self.fk, ScipyOptimizer() if optimizer is None else optimizer)
 
         self.angles = [0.] * len(
             [c for c in components if isinstance(c, Joint)]
