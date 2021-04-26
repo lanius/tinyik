@@ -115,7 +115,7 @@ class Joint(GeoComponent):
         return self.c.matrix(self.angle)
 
 
-def visualize(actuator, target=None):
+def build_geos(actuator, target=None):
     root = None
     p = None
     joints = []
@@ -146,5 +146,10 @@ def visualize(actuator, target=None):
     else:
         geos = root.geo()
 
+    return geos
+
+
+def visualize(actuator, target=None):
+    geos = build_geos(actuator, target)
     o3d.visualization.draw_geometries(
         geos, window_name='tinyik vizualizer', width=640, height=480)
