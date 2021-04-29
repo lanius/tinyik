@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "tinyik"
-version = "2.1.1"
+version = "2.2.0"
 description = "A tiny inverse kinematics solver"
 license = "MIT"
 authors = ["lanius <lanius@nirvake.org>"]

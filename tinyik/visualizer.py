@@ -38,10 +38,10 @@ def rotate(axis, angle):
         ])
 
 
-def create_sphere(p, r=.1, color=None):
+def create_sphere(p, radius, color=None):
     if color is None:
         color = [.8, .8, .8]
-    geo = o3d.geometry.TriangleMesh.create_sphere(radius=r)
+    geo = o3d.geometry.TriangleMesh.create_sphere(radius=radius)
     geo.compute_vertex_normals()
     geo.paint_uniform_color(color)
     geo.transform(translate(p))
@@ -51,10 +51,12 @@ def create_sphere(p, r=.1, color=None):
 class GeoComponent:
 
     child = None
+    radius = .1
 
     def tip(self, link_color=None):
         return create_sphere(
             [0., 0., 0.],
+            radius=self.radius*2,
             color=[.8, .8, .8] if link_color is None else link_color)
 
     def geo(self, mat=None, link_color=None):
@@ -72,8 +74,9 @@ class GeoComponent:
 
 class Link(GeoComponent):
 
-    def __init__(self, c):
+    def __init__(self, c, radius):
         self.c = c
+        self.radius = radius
 
     def base_geo(self, link_color=None):
         norm = np.linalg.norm(self.c.coord)
@@ -82,7 +85,7 @@ class Link(GeoComponent):
         axis = cross / np.linalg.norm(cross)
         angle = np.arccos(np.dot(base, self.c.coord) / (norm ** 2))
         geo = o3d.geometry.TriangleMesh.create_cylinder(
-            radius=.05, height=norm)
+            radius=self.radius, height=norm)
         geo.compute_vertex_normals()
         geo.paint_uniform_color(
             [.8, .8, .8] if link_color is None else link_color)
@@ -95,12 +98,14 @@ class Link(GeoComponent):
 
 class Joint(GeoComponent):
 
-    def __init__(self, c):
+    def __init__(self, c, radius):
         self.c = c
+        self.radius = radius
         self.angle = 0.
 
     def base_geo(self, _=None):
-        geo = o3d.geometry.TriangleMesh.create_cylinder(radius=.1, height=.2)
+        geo = o3d.geometry.TriangleMesh.create_cylinder(
+            radius=self.radius*2, height=self.radius*4)
         geo.compute_vertex_normals()
         geo.paint_uniform_color([.2, .2, .9])
         rx = {
@@ -115,16 +120,16 @@ class Joint(GeoComponent):
         return self.c.matrix(self.angle)
 
 
-def visualize(actuator, target=None):
+def build_geos(actuator, target=None, radius=.05):
     root = None
     p = None
     joints = []
     for c in actuator.components:
         if hasattr(c, 'axis'):
-            gc = Joint(c)
+            gc = Joint(c, radius)
             joints.append(gc)
         else:
-            gc = Link(c)
+            gc = Link(c, radius)
 
         if root is None:
             root = gc
@@ -142,9 +147,14 @@ def visualize(actuator, target=None):
         for j, a in zip(joints, actuator.angles):
             j.angle = a
         geos += root.geo()
-        geos += [create_sphere(target, r=.12, color=[.8, .2, .2])]
+        geos += [create_sphere(target, radius=radius*2.4, color=[.8, .2, .2])]
     else:
         geos = root.geo()
 
+    return geos
+
+
+def visualize(actuator, target=None, radius=.05):
+    geos = build_geos(actuator, target, radius)
     o3d.visualization.draw_geometries(
         geos, window_name='tinyik vizualizer', width=640, height=480)
