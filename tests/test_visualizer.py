@@ -19,6 +19,22 @@ def visualize_with_target():
     tinyik.visualize(leg, target=[.8, .0, .8])
 
 
+large_tokens = [
+    [85., 80., 0.],
+    'y',
+    [500., 0., 0.],
+    'y',
+    [0., -500., 0.],
+    'y'
+]
+
+
+def large_visualize():
+    arm = tinyik.Actuator(large_tokens)
+    tinyik.visualize(arm)
+
+
 if __name__ == '__main__':
     visualize()
     visualize_with_target()
+    large_visualize()
