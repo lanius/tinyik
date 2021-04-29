@@ -31,7 +31,7 @@ large_tokens = [
 
 def large_visualize():
     arm = tinyik.Actuator(large_tokens)
-    tinyik.visualize(arm)
+    tinyik.visualize(arm, radius=15.)
 
 
 if __name__ == '__main__':
