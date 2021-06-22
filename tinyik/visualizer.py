@@ -80,16 +80,41 @@ class Link(GeoComponent):
 
     def base_geo(self, link_color=None):
         norm = np.linalg.norm(self.c.coord)
-        base = np.array([0., 0., norm])
-        cross = np.cross(base, self.c.coord)
-        axis = cross / np.linalg.norm(cross)
-        angle = np.arccos(np.dot(base, self.c.coord) / (norm ** 2))
+
         geo = o3d.geometry.TriangleMesh.create_cylinder(
             radius=self.radius, height=norm)
         geo.compute_vertex_normals()
         geo.paint_uniform_color(
             [.8, .8, .8] if link_color is None else link_color)
-        geo.transform(rotate(axis, angle) @ translate(base / 2))
+
+        # Calculate transformation matrix for cylinder
+        # With help from https://stackoverflow.com/a/59829173
+        def get_cross_prod_mat(vector):
+            return np.array([
+                [0, -vector[2], vector[1]],
+                [vector[2], 0, -vector[0]],
+                [-vector[1], vector[0], 0],
+            ])
+        cylinder_dir_unit_vector = self.c.coord / norm
+
+        # Unit vector for "up" direction
+        z_unit_vector = np.array([0, 0, 1])
+        z_rotation_mat = get_cross_prod_mat(z_unit_vector)
+
+        z_c_vec = np.matmul(z_rotation_mat, cylinder_dir_unit_vector)
+        z_c_vec_mat = get_cross_prod_mat(z_c_vec)
+
+        # Added np.abs to ensure that unit vector that is aligned with any
+        # axis in the negative direction does not
+        rotation_mat = np.eye(3, 3) + z_c_vec_mat + np.matmul(
+            z_c_vec_mat, z_c_vec_mat)/(
+                (1 + np.abs(np.dot(z_unit_vector, cylinder_dir_unit_vector))))
+
+        cylinder_transform_mat = np.vstack((np.hstack(
+            (rotation_mat, np.transpose(
+                np.array([self.c.coord])/2))), np.array([0, 0, 0, 1])))
+
+        geo.transform(cylinder_transform_mat)
         return geo
 
     def mat(self):
